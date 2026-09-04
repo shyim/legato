@@ -1,0 +1,84 @@
+[workspace]
+members = ["crates/legato-rules"]
+default-members = [".", "crates/legato-rules"]
+resolver = "3"
+
+[workspace.package]
+edition = "2024"
+rust-version = "1.98.0"
+license = "MIT"
+repository = "https://github.com/shyim/legato"
+
+[workspace.dependencies]
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.151"
+
+[package]
+name = "legato"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "A fast backward-compatibility checker for PHP libraries"
+keywords = ["php", "backward-compatibility", "semver", "composer"]
+categories = ["command-line-utilities", "development-tools"]
+include = [
+    "src/**",
+    "tests/**",
+    "docs/**",
+    "build.rs",
+    "Cargo.lock",
+    "LICENSE",
+    "PARITY.md",
+    "README.md",
+    "RULES.md",
+    "THIRD_PARTY_NOTICES.md",
+]
+build = "build.rs"
+
+[lib]
+name = "legato"
+path = "src/lib.rs"
+
+[[bin]]
+name = "legato"
+path = "src/main.rs"
+
+[dependencies]
+anstream = "=1.0.0"
+anstyle = "=1.0.14"
+globset = "0.4.20"
+indexmap = "2.14.1"
+legato-rules = { version = "0.1.0", path = "crates/legato-rules", features = ["serde"] }
+mago-allocator = "=1.47.4"
+mago-codex = "=1.47.4"
+mago-database = "=1.47.4"
+mago-fingerprint = "=1.47.4"
+mago-names = "=1.47.4"
+mago-php-version = "=1.47.4"
+mago-prelude = { version = "=1.47.4", features = ["serde"] }
+mago-span = "=1.47.4"
+mago-syntax = "=1.47.4"
+mago-word = "=1.47.4"
+pcre2 = "=0.2.11"
+riff-core = { git = "https://github.com/shyim/riff", rev = "4a40d9554d0d933234a4534a29e393dce0f2d7d4" }
+semver = "1.0.28"
+serde.workspace = true
+serde_json.workspace = true
+tempfile = "3.27.0"
+thiserror = "2.0.20"
+tokio = { version = "1.53.1", features = ["rt-multi-thread"] }
+toml = "1.1.4"
+usage = { package = "usage-rs", version = "=6.6.0", features = ["completions"] }
+
+[build-dependencies]
+mago-prelude = { version = "=1.47.4", features = ["build"] }
+
+[dev-dependencies]
+pretty_assertions = "1.4.1"
+usage = { package = "usage-rs", version = "=6.6.0", features = ["completions", "test"] }
+
+[profile.release]
+lto = "thin"
+strip = "symbols"

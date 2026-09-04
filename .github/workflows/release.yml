@@ -1,0 +1,31 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  linux-x86_64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.98.0
+          targets: x86_64-unknown-linux-musl
+      - run: sudo apt-get update && sudo apt-get install --yes musl-tools
+      - run: cargo build --release --locked --package legato --target x86_64-unknown-linux-musl
+      - name: Package
+        run: |
+          install -Dm755 target/x86_64-unknown-linux-musl/release/legato dist/legato
+          tar -C dist -czf legato-${GITHUB_REF_NAME}-x86_64-unknown-linux-musl.tar.gz legato
+          sha256sum legato-${GITHUB_REF_NAME}-x86_64-unknown-linux-musl.tar.gz > SHA256SUMS
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            legato-*.tar.gz
+            SHA256SUMS

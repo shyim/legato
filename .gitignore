@@ -1,0 +1,6 @@
+/target/
+/coverage/
+/dist/
+/SHA256SUMS
+/legato-*.tar.gz
+*.profraw
